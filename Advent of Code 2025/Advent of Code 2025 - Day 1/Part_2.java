@@ -7,7 +7,6 @@ public class Part_2 {
     public static final File
             example = new File("Advent of Code 2025\\Advent of Code 2025 - Tag 1\\example.txt"),
             task = new File("Advent of Code 2025\\Advent of Code 2025 - Tag 1\\task.txt"),
-            task_patrick = new File("Advent of Code 2025\\Advent of Code 2025 - Tag 1\\task_patrick.txt");
 
     public static boolean debug = false;
 

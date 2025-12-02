@@ -7,7 +7,6 @@ public class Part_1 {
     public static final File
             example = new File("src/main/java/exploit467/example.txt"),
             task = new File("src/main/java/exploit467/task.txt"),
-            task_patrick = new File("src/main/java/exploit467/task_patrick.txt");
 
     public static void main(String[] args) throws IOException {
         System.out.println("Example: ");
