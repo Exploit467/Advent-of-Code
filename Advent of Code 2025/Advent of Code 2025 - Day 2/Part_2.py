@@ -1,41 +1,37 @@
 def main():
     with open(r"Advent of Code 2025\Advent of Code 2025 - Day 2\ranges.txt", "r") as file:
-        lines = file.readlines()[0]
-        ranges = lines.split(",")
+        ranges = file.readlines()[0].split(",")
 
         invalidIDS = set()
         for n, r in enumerate(ranges):
             # Fancy log
-            print(f"Processing Range {n + 1}/{len(ranges)} ({int((n + 1) / len(ranges) * 100)}%): {r}", end=" " * 30 + "\r")
+            # print(f"Processing Range {n + 1}/{len(ranges)} ({int((n + 1) / len(ranges) * 100)}%): {r}", end=" " * 30 + "\r")
 
-            rr = r.split("-")
-
-            _from, _to = int(rr[0]), int(rr[1])
+            [_from, _to] = [int(s) for s in r.split("-")]
             for i in range(_from, _to + 1):
                 val = str(i)
                 for a in range(2, len(val) + 1):
-                    parts = equally_sized_parts(val, a)
-
-                    if (all_equal(parts)):
+                    if(check_by_part_size(val, a)):
                         invalidIDS.add(i)
 
         print("Solution:", sum(int(a) for a in invalidIDS), " " * 30)
 
-def equally_sized_parts(string: str, count: int) -> list[str]:
+def check_by_part_size(string: str, size: int) -> bool:
     l = len(string)
-    if count <= 1 or l < count or l % count != 0:
-        return []
+    if size <= 1 or l < size or l % size != 0:
+        return False
     
-    result = []
-    step = l // count
+    sub = None
+    step = l // size
     while (string != ""):
-        result.append(string[:step])
-        string = string[step:]
-
-    return result
-
-def all_equal(list: list[str]) -> bool:
-    return all(e == list[0] for e in list) if len(list) > 0 else False
+        next, string = string[:step], string[step:]
+        if next == sub or sub is None:
+            sub = next
+            continue
+        
+        return False
+    
+    return True
 
 if __name__ == "__main__":
     main()
