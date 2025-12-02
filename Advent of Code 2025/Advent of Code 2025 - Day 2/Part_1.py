@@ -18,7 +18,7 @@ def main():
                 if half1 == half2:
                     invalidIDS.add(i)
 
-        print("Summe ungültiger IDS:", sum(int(a) for a in invalidIDS), " " * 30)
+        print("Solution:", sum(int(a) for a in invalidIDS), " " * 30)
 
 if __name__ == "__main__":
     main()

@@ -19,7 +19,7 @@ def main():
                     if (all_equal(parts)):
                         invalidIDS.add(i)
 
-        print("Summe ungültiger IDS:", sum(int(a) for a in invalidIDS), " " * 30)
+        print("Solution:", sum(int(a) for a in invalidIDS), " " * 30)
 
 def equally_sized_parts(string: str, count: int) -> list[str]:
     l = len(string)

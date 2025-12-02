@@ -29,7 +29,7 @@ public class Part_1 {
             }
         }
 
-        System.out.println("Zeros: " + zeros + "; Last Value: " + curVal + "; Lines calculated: " + list.size());
+        System.out.println("Solution: " + zeros + "; Last Value: " + curVal + "; Lines calculated: " + list.size());
     }
 
     public static int add(int a, int b) {
