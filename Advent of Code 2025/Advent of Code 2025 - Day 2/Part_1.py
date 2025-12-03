@@ -1,5 +1,7 @@
+INPUT = r"Advent of Code 2025\Advent of Code 2025 - Day 2\input.txt"
+
 def main():
-    with open(r"Advent of Code 2025\Advent of Code 2025 - Day 2\ranges.txt", "r") as file:
+    with open(INPUT, "r") as file:
         lines = file.readlines()[0]
         ranges = lines.split(",")
 
