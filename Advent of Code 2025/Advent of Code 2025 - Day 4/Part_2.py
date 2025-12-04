@@ -10,11 +10,13 @@ def main():
         input = [f.strip("\n") for f in file.readlines()]
         grid = [[c for c in i] for i in input]
 
-        grid, res = step(grid)
-        count = res
-        while res != 0:
+        count = 0
+        while True:
             grid, res = step(grid)
             count += res
+
+            if res == 0:
+                break
 
         print(count)
 
@@ -27,7 +29,6 @@ def step(grid: list[list[str]]):
                 res += 1
 
     return [[c.replace("x", ".") for c in i] for i in grid], res
-
 
 def adjacent_rolls(grid: list[list[str]], coords: tuple[int, int]) -> bool:
     found = 0
