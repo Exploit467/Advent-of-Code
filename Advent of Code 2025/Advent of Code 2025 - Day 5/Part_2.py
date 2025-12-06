@@ -6,7 +6,7 @@ def main():
         data = file.readlines()
         data = [s.replace("\n", "") for s in data]
 
-        ranges, _ = cut_input(data, lambda x: x == "")
+        ranges, _ = cut_input(data)
         ranges = [r.split("-") for r in ranges]
         ranges: list[tuple[int, int]] = [(int(r[0]), int(r[1])) for r in ranges]
 
@@ -24,8 +24,6 @@ def get_unique_range(range: tuple[int, int], checked_ranges: list[tuple[int, int
     for cr in checked_ranges:
         to_check = cut_overlap(to_check, cr)
 
-    print(f"Unique parts of range {range} => {to_check}")
-
     range_lengths = [r[1] - r[0] + 1 if r[0] != -1 else 0 for r in to_check]
     return sum(range_lengths)
 
@@ -41,27 +39,29 @@ def cut_single_overlap(subrange: tuple[int, int], overlap: tuple[int, int]) -> l
 
     if minO >= minR and minO <= maxR:
         if maxO >= maxR:
+            # overlap covers upper part
             return [(minR, minO - 1)]
         else:
+            # overlap is within => split into two subranges
             return [(minR, minO - 1), (maxO + 1, maxR)]
     
     if maxO <= maxR and maxO >= minR:
         if minO <= minR:
+            # overlap covers lower part
             return [(maxO + 1, maxR)]
         else:
+            # overlap is within => split into two subranges
             return [(minR, minO - 1), (maxO + 1, maxR)]
 
-    # overlap covers the whole subrange => nothing is fresh
+    # overlap covers the whole subrange => whole range is NOT unique
     if minO <= minR and maxO >= maxR:
         return [(-1, -1)]
 
     return [subrange]
 
-
-def cut_input(list: list[str], condition) -> tuple[list[str], list[str]]:
+def cut_input(list: list[str]) -> tuple[list[str], list[str]]:
     for idx in range(len(list)):
-        val = list[idx]
-        if condition(val):
+        if list[idx] == "":
             return list[:idx], list[idx + 1:]
 
     raise ValueError(cut_input.__name__, list)

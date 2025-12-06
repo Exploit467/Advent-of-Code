@@ -6,7 +6,7 @@ def main():
         data = file.readlines()
         data = [s.replace("\n", "") for s in data]
 
-        ranges, ids = cut_at_condition(data, lambda x: x == "")
+        ranges, ids = cut_input(data)
         ranges = [r.split("-") for r in ranges]
 
         valid_ids = set()
@@ -19,13 +19,12 @@ def main():
 
         print(len(valid_ids))
 
-def cut_at_condition(list: list[str], condition) -> tuple[list[str], list[str]]:
+def cut_input(list: list[str]) -> tuple[list[str], list[str]]:
     for idx in range(len(list)):
-        val = list[idx]
-        if condition(val):
+        if list[idx] == "":
             return list[:idx], list[idx + 1:]
 
-    raise ValueError(cut_at_condition.__name__, list)
+    raise ValueError(cut_input.__name__, list)
 
 if __name__ == "__main__":
     main()
