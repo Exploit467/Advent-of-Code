@@ -1,4 +1,4 @@
-INPUT = r"Advent of Code 2025\Advent of Code 2025 - Day 2\input.txt"
+INPUT = r"input.txt"
 
 def main():
     with open(INPUT, "r") as file:

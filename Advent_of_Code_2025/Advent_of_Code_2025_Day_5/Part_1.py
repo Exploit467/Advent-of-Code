@@ -1,5 +1,5 @@
-INPUT = r"Advent of Code 2025\Advent of Code 2025 - Day 5\input.txt"
-TEST_INPUT = r"Advent of Code 2025\Advent of Code 2025 - Day 5\test_input.txt"
+INPUT = r"input.txt"
+TEST_INPUT = r"test_input.txt"
 
 def main():
     with open(INPUT, "r", encoding="utf-8") as file:

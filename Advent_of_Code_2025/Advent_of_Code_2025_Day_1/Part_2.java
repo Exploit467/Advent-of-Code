@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Part_2 {
     public static final File
-            example = new File("Advent of Code 2025\\Advent of Code 2025 - Day 1\\example.txt"),
-            task = new File("Advent of Code 2025\\Advent of Code 2025 - Day 1\\task.txt");
+            example = new File("example.txt"),
+            task = new File("task.txt");
 
     public static boolean debug = false;
 

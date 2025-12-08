@@ -1,5 +1,5 @@
-INPUT = r"Advent of Code 2025\Advent of Code 2025 - Day 3\input.txt"
-INPUT_TEST = r"Advent of Code 2025\Advent of Code 2025 - Day 3\test_input.txt"
+INPUT = r"input.txt"
+TEST_INPUT = r"test_input.txt"
 
 DIGITS = 12
 

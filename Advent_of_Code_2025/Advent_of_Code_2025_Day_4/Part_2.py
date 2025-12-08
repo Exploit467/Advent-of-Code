@@ -1,7 +1,8 @@
-INPUT = r"Advent of Code 2025\Advent of Code 2025 - Day 4\input.txt"
-TEST_INPUT = r"Advent of Code 2025\Advent of Code 2025 - Day 4\test_input.txt"
+INPUT = r"input.txt"
+TEST_INPUT = r"test_input.txt"
 
 PAPER = "@"
+MARKER = "x"
 MAX_ADJACENT = 3
 
 def main():
@@ -9,15 +10,25 @@ def main():
         input = [f.strip("\n") for f in file.readlines()]
         grid = [[c for c in i] for i in input]
 
-        res = 0
+        count = 0
+        while True:
+            grid, res = step(grid)
+            count += res
 
-        for x in range(len(grid)):
-            for y in range(len(grid[0])): # assuming grid is n^2
-                if grid[y][x] == PAPER and adjacent_rolls(grid, (x, y)):
-                    res += 1
+            if res == 0:
+                break
 
-        print(res)
+        print(count)
 
+def step(grid: list[list[str]]):
+    res = 0
+    for y in range(len(grid)):
+        for x in range(len(grid[y])):
+            if grid[y][x] == PAPER and adjacent_rolls(grid, (x, y)):
+                grid[y][x] = MARKER
+                res += 1
+
+    return [[c.replace("x", ".") for c in i] for i in grid], res
 
 def adjacent_rolls(grid: list[list[str]], coords: tuple[int, int]) -> bool:
     found = 0
@@ -26,7 +37,7 @@ def adjacent_rolls(grid: list[list[str]], coords: tuple[int, int]) -> bool:
             if coords == (x, y):
                 continue
 
-            if grid[y][x] == PAPER:
+            if grid[y][x] in [PAPER, MARKER]:
                 found += 1
 
     return found <= MAX_ADJACENT
