@@ -1,3 +1,5 @@
+from Part_1 import calc, fancy_print
+
 INPUT = r"input.txt"
 TEST_INPUT = r"test_input.txt"
 
@@ -6,64 +8,131 @@ BEAM = "|"
 SPLITTER = "^"
 
 def main():
-    with open(TEST_INPUT, "r", encoding="utf-8") as file:
-        timelines = [[f.replace("\n", "") for f in file.readlines()]]
+    with open(INPUT, "r", encoding="utf-8") as file:
+        lines = [f.replace("\n", "") for f in file.readlines()]
 
-        m = len(timelines[0])
-        for i in range(m - 1):
-            s = f"{len(timelines):,}".replace(",", ".")
-            print(f"Currently in line {i} of {m} ({int(i/m*100)}%) with {s} timelines", end=" " * 30 + "\r")
-            timelines = next_iteration(timelines, i)
+        t1 = Timelines(lines)
+        
+        while not t1.is_last_line():
+            t1.next_iteration()
 
-        s = f"{len(timelines):,}".replace(",", ".")
-        print(f"Timelines: {s}")
+        t1.print_timelines()
 
-def fancy_print(lines: list[str]):
-    print("############ Manifold ##############")
-    print("\n".join(lines))
-    print("####################################")
 
-def next_iteration(timelines: list[list[str]], line_idx: int) -> list[list[str]]:
-    result = []
-    for t in timelines:
-        result += single_iteration(t, line_idx)
+class Timelines:
+    def __init__(self, lines: list[str]):
+        self.cur_idx: int = -1
+        
+        tree, _ = calc(lines)
+        self.lines: list[str] = self.reverse(tree)
 
-    return result
+        self.timelines: list['Timeline'] = []
 
-def single_iteration(timeline: list[str], line_idx: int) -> list[list[str]]:
-    if (line_idx >= len(timeline) - 1):
-        return [timeline]
+    def is_last_line(self) -> bool:
+        return self.cur_idx == len(self.lines) - 1
 
-    cur_line = timeline[line_idx]
-    next_line = timeline[line_idx + 1]
+    def print_tree(self, reverse: bool = True):
+        fancy_print(self.reverse(self.lines) if reverse else self.lines)
 
-    beam_idx = cur_line.find(BEAM) if BEAM in cur_line else cur_line.find(START)
-    below = next_line[beam_idx]
+    def print_timelines(self):
+        for t in self.timelines:
+            print(str(t))
 
-    if below == SPLITTER:
-        t1 = timeline.copy()
-        t1[line_idx + 1] = string_set(next_line, beam_idx - 1, BEAM)
+    def fancy_iteration(self):
+        print("#" * 50)
+        print("Next iteration!")
+        print("#" * 50)
+        self.next_iteration()
+        self.print_timelines()
 
-        t2 = timeline.copy()
-        t2[line_idx + 1] = string_set(next_line, beam_idx + 1, BEAM)
+    def next_iteration(self):
+        if self.cur_idx == -1:
+            self.first_line()
+        
+        else:
+            self.merge_all()
+        
+        self.cur_idx += 1
+            
 
-        return [t1, t2]
-    
-    else:
-        next_line = string_set(next_line, beam_idx, BEAM)
+    def first_line(self) -> None:
+        string_line = self.lines[0]
+        self.timelines = []
+        for i in range(len(string_line)):
+            if string_line[i] == BEAM:
+                self.timelines.append(Timeline(i, 0, 1))
 
-    timeline[line_idx + 1] = next_line
-    return [timeline]
+        self.sort()
 
-def string_set(string: str, idx: int, value: str) -> str:
-    if idx == 0:
-        return value + string[1:]
-    
-    elif idx == len(string) - 1:
-        return string[:len(string) - 1] + value
-    
-    else: 
-        return string[:idx] + value + string[idx + 1:]
+    def sort(self):
+        self.timelines.sort(key = lambda x: x.pos)
+
+    def merge_all(self) -> None:
+        current_line = self.lines[self.cur_idx]
+        result = []
+        
+        # assuming timeline are in correct order from left to right
+        for idx, current in enumerate(self.timelines):
+            if idx >= len(self.timelines) - 1:
+                continue
+
+            next = self.timelines[idx + 1]
+
+            merged = Timeline.merge(current_line, current, next)
+            if merged is not None:
+                result.append(merged)
+
+        # Check for timelines that need to go straigth up
+        for t in self.timelines:
+            if t.has_beam_above(self.lines):
+                t.move_up()
+                result.append(t)
+
+        self.timelines = result
+
+        # Last but not least: Sort
+        self.sort()
+
+    @staticmethod
+    def reverse(list: list) -> list:
+        result = []
+        for t in reversed(list):
+            result.append(t)
+
+        return result
+
+class Timeline:
+    def __init__(self, pos: int, line: int, timelines: int):
+        self.pos = pos
+        self.line = line
+        self.timelines = timelines
+
+    def __str__(self):
+        formatted_number = f"{self.timelines:,}".replace(",", ".")
+        return f"Positon: {self.pos}, Line: {self.line}, Timelines: {formatted_number}"
+
+    def move_up(self):
+        self.line += 1
+
+    def has_beam_above(self, lines: list[str]):
+        return lines[self.line][self.pos] == BEAM
+
+    @staticmethod
+    def merge(string_line: str, t1: 'Timeline', t2: 'Timeline') -> 'Timeline':
+        if abs(t1.pos - t2.pos) != 2:
+            # Not next to each other => cannot be merged
+            return None
+
+        new_pos = min(t1.pos, t2.pos) + 1
+        
+        if string_line[new_pos] != SPLITTER:
+            # No splitter in between => cannot be merged
+            return None
+
+        assert t1.line == t2.line, "Given timelines are in different lines"
+        new_line = t1.line + 1
+
+        return Timeline(new_pos, new_line, t1.timelines + t2.timelines)
 
 if __name__ == "__main__":
     main()

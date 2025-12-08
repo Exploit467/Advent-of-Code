@@ -9,19 +9,26 @@ def main():
     with open(INPUT, "r", encoding="utf-8") as file:
         lines = [f.replace("\n", "") for f in file.readlines()]
 
-        splits = 0
-        for i in range(len(lines) - 1):
-            lines, s = iteration(lines, i)
-            splits += s
+        lines, splits = calc(lines)
 
         fancy_print(lines, splits)
 
-def fancy_print(lines: list[str], splits: int):
+# Seperate function as it is also used in Part_2.py
+def calc(lines: str) -> tuple[list[str], int]:
+    splits = 0
+    for i in range(len(lines) - 1):
+        lines, s = iteration(lines, i)
+        splits += s
+    
+    return lines, splits
+
+def fancy_print(lines: list[str], splits: int = -1):
     print("############ Manifold ##############")
     print("\n".join(lines))
     print("####################################")
-    print("Splits: " + str(splits))
-    print("####################################")
+    if splits != -1:
+        print("Splits: " + str(splits))
+        print("####################################")
 
 def iteration(lines: list[str], line_idx: int) -> tuple[list[str], int]:
     if (line_idx >= len(lines) - 1):
